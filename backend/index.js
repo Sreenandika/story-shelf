@@ -30,6 +30,16 @@ app.get("/signup", (req, res) => {
 app.get("/:username/home", (req, res) => {
 	res.sendFile(path.join(__dirname, "../public/home.html"));
 });
+app.get("/:username/profile", (req, res) => {
+	res.sendFile(path.join(__dirname, "../public/profile.html"));
+});
+
+function calculateCosineSimilarity(vecA, vecB) {
+	const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
+	const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
+	const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
+	return dotProduct / (magnitudeA * magnitudeB);
+}
 
 app.post("/signup", async (req, res) => {
 	await client.connect();
@@ -141,12 +151,42 @@ app.post("/recommendations", async (req, res) => {
 	}
 });
 
-function calculateCosineSimilarity(vecA, vecB) {
-	const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
-	const magnitudeA = Math.sqrt(vecA.reduce((sum, a) => sum + a * a, 0));
-	const magnitudeB = Math.sqrt(vecB.reduce((sum, b) => sum + b * b, 0));
-	return dotProduct / (magnitudeA * magnitudeB);
-}
+app.post("/profile",async(req,res)=>{
+	const username = req.body.username;
+	if (!username) {
+		return res.status(400).json({ error: "User ID is required" });
+	}
+	try {
+		await client.connect();
+		const database = client.db("story_shelf");
+		const profile = await funcs.getProfile(database, username);
+		res.send(profile);
+	}
+	catch(error){
+		res.send(error);
+		
+	}
+});
+app.post("/login", async (req, res) => {
+	const { email, password } = req.body;
+	if (!email || !password) {
+		return res.status(400).json({ error: "Email and password are required" });
+	}
+	try {
+		await client.connect();
+		const database = client.db("story_shelf");
+		const user = await funcs.checkLogin(database, email, password);
+		if (user.success) {
+			res.json({ message: "Login successful", user });
+		} else {
+			res.status(401).json({ error: "Invalid email or password" });
+		}
+	} catch (error) {
+		console.error("Error during login:", error);
+		res.status(500).json({ error: "Internal server error" });
+	}
+});
+
 
 app.listen(port, () => {
 	console.log(`Server is running on http://localhost:${port}`);

@@ -41,19 +41,19 @@ async function addBook(db, username, book) {
 		}
 	} catch (error) {
 		return { success: false, message: error.message };
-	} finally{
-		
+	} finally {
 	}
 }
+
 async function getBooks(db, username) {
 	try {
 		const users = db.collection("users");
 		const pipeline = [
-            { $match: { username: username } },
-            { $unwind: "$books" },
-            { $match: { "books.category": "want-to-read" } },
-            { $project: { _id: 0, book: "$books" } },
-        ];
+			{ $match: { username: username } },
+			{ $unwind: "$books" },
+			{ $match: { "books.category": "want-to-read" } },
+			{ $project: { _id: 0, book: "$books" } },
+		];
 		const books = await users.aggregate(pipeline).toArray();
 		console.log(books);
 		return books;
@@ -62,8 +62,44 @@ async function getBooks(db, username) {
 		return [];
 	}
 }
+async function getProfile(db, username) {
+	try {
+		const users = db.collection("users");
+		const user = await users.findOne(
+			{ username: username },
+			{ projection: { _id: 0, password: 0 } }
+		);
+		if (user) {
+			return user;
+		} else {
+			throw new Error("User not found");
+		}
+	} catch (error) {
+		console.error(`Error retrieving books: ${error}`);
+		return [];
+	}
+}
+async function checkLogin(db, email, password) {
+	try {
+		const users = db.collection("users");
+		const user = await users.findOne({ email: email });
+		if (!user) {
+			return { success: false, message: "User not found" };
+		}
+		const passwordMatch = await bcrypt.compare(password, user.password);
+		if (passwordMatch) {
+			return { success: true, message: "Login successful", user: user };
+		} else {
+			return { success: false, message: "Invalid password" };
+		}
+	} catch (error) {
+		return { success: false, message: error.message };
+	}
+}
 module.exports = {
 	addUser,
 	addBook,
 	getBooks,
+	getProfile,
+	checkLogin
 };

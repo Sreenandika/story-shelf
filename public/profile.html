@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Profile Page</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+			}
+			.profile-header {
+				text-align: center;
+				margin-bottom: 20px;
+			}
+			.section {
+				margin-bottom: 20px;
+			}
+			.book {
+				border: 1px solid #ccc;
+				padding: 10px;
+				margin-bottom: 10px;
+			}
+			.book img {
+				max-width: 100px;
+				display: block;
+				margin-bottom: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="profile-header">
+			<h1 id="name">Name</h1>
+			<p id="email">Email</p>
+		</div>
+
+		<div class="section" id="want-to-read">
+			<h2>Want to Read</h2>
+		</div>
+
+		<div class="section" id="read">
+			<h2>Read</h2>
+		</div>
+
+		<div class="section" id="dropped">
+			<h2>Dropped</h2>
+		</div>
+
+		<script>
+			document.addEventListener("DOMContentLoaded", function () {
+				const username = window.location.pathname.split("/")[1];
+				fetch("/profile", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ username: username }),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						console.log(data);
+						document.getElementById("name").textContent = data.username;
+						document.getElementById("email").textContent = data.email;
+
+						const wantToRead = [];
+						const read = [];
+						const dropped = [];
+
+						data.books.forEach((book) => {
+							if (book.category === "want-to-read") {
+								wantToRead.push(book);
+							} else if (book.category === "read") {
+								read.push(book);
+							} else if (book.category === "dropped") {
+								dropped.push(book);
+							}
+						});
+
+						appendBooks("want-to-read", wantToRead);
+						appendBooks("read", read);
+						appendBooks("dropped", dropped);
+					})
+					.catch((error) => console.error("Error:", error));
+			});
+
+			function appendBooks(sectionId, books) {
+				const section = document.getElementById(sectionId);
+				books.forEach((book) => {
+					const bookDiv = document.createElement("div");
+					bookDiv.className = "book";
+
+					const img = document.createElement("img");
+					img.src = book.coverLink;
+					bookDiv.appendChild(img);
+
+					const title = document.createElement("h3");
+					title.textContent = book.bookName;
+					bookDiv.appendChild(title);
+
+					const description = document.createElement("p");
+					description.textContent = book.subject;
+					bookDiv.appendChild(description);
+
+					section.appendChild(bookDiv);
+				});
+			}
+		</script>
+	</body>
+</html>
