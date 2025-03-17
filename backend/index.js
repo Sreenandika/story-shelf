@@ -1,25 +1,41 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const connect = require("../backend/db-helpers/const.js");
+const express = require('express');
+const path = require('path');
+const app = express();
+const bodyParser = require("body-parser");
+const port = 3000;
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+const connect = require("./db-helpers/const");
+const funcs = require('./db-helpers/database')
+
+const { MongoClient, ServerApiVersion } = require("mongodb");
 const uri = connect.uri;
 const client = new MongoClient(uri, {
 	serverApi: {
 		version: ServerApiVersion.v1,
 		strict: true,
 		deprecationErrors: true,
-	}
+	},
 });
 
-async function run() {
-	try {
-		// Connect the client to the server	(optional starting in v4.7)
-		await client.connect();
-		// Send a ping to confirm a successful connection
-		await client.db("admin").command({ ping: 1 });
-		console.log("Pinged your deployment. You successfully connected to MongoDB!");
-	} finally {
-		// Ensures that the client will close when you finish/error
-		await client.close();
-	}
-}
-run().catch(console.dir);
 
+
+
+app.get('/', (req, res) => {
+	res.sendFile(path.join(__dirname, '../public/login.html'));
+});
+
+app.post("/signup",async (req, res)=>{
+	await client.connect();
+	const database = client.db("story_shelf");
+	console.log(req.body);
+	const { email, password } = req.body;
+	const result = await funcs.addUser(database,email,password);
+	res.send(result);
+});
+
+
+app.listen(port, () => {
+	console.log(`Server is running on http://localhost:${port}`);
+});
