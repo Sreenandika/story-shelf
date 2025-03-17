@@ -1,5 +1,4 @@
-const bcrypt = require('bcrypt');
-
+const bcrypt = require("bcrypt");
 
 async function addUser(db, email, password) {
 	try {
@@ -28,6 +27,23 @@ async function addUser(db, email, password) {
 		return { success: false, message: error.message };
 	}
 }
+async function addBook(db, username, book) {
+	try {
+		const users = db.collection("users");
+		const result = await users.updateOne(
+			{ username: username },
+			{ $push: { books: book } }
+		);
+		if (result.matchedCount > 0) {
+			return { success: true, message: "User added successfully" };
+		} else {
+			return { success: false, message: "Failed to add user" };
+		}
+	} catch (error) {
+		return { success: false, message: error.message };
+	}
+}
 module.exports = {
 	addUser,
+	addBook,
 };
