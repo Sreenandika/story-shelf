@@ -41,9 +41,29 @@ async function addBook(db, username, book) {
 		}
 	} catch (error) {
 		return { success: false, message: error.message };
+	} finally{
+		
+	}
+}
+async function getBooks(db, username) {
+	try {
+		const users = db.collection("users");
+		const pipeline = [
+            { $match: { username: username } },
+            { $unwind: "$books" },
+            { $match: { "books.category": "want-to-read" } },
+            { $project: { _id: 0, book: "$books" } },
+        ];
+		const books = await users.aggregate(pipeline).toArray();
+		console.log(books);
+		return books;
+	} catch (error) {
+		console.error(`Error retrieving books: ${error}`);
+		return [];
 	}
 }
 module.exports = {
 	addUser,
 	addBook,
+	getBooks,
 };
