@@ -3,16 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sign up</title>
+    <title>Sign Up | BookNest</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url("https://i.pinimg.com/736x/55/12/60/5512604ff269573f1f520edd06d5b399.jpg");
+            background-image: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .signup-container {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 350px;
+            position: relative;
+            animation: slideIn 0.8s ease-in-out;
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #451453;
+            font-weight: 700;
+            animation: fadeIn 1s ease-in-out;
+        }
+        input {
+            width: 90%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: 0.3s ease-in-out;
+            outline: none;
+        }
+        input:focus {
+            border-color: #6b2688;
+            box-shadow: 0 0 10px rgba(142, 68, 173, 0.6);
+            transform: scale(1.02);
+        }
+        .btn {
+            width: 90%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        .signup-btn {
+            background-color: #471f58;
+            color: white;
+        }
+        .signup-btn:hover {
+            background-color: #43085c;
+            transform: translateY(-2px);
+        }
+        .login-btn {
+            background-color: transparent;
+            color: #4b215e;
+            border: 2px solid #8e44ad;
+        }
+        .login-btn:hover {
+            background-color: #8e44ad;
+            color: white;
+            transform: translateY(-2px);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <h2>Sign Up</h2>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br><br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <button onclick="signUp()">Sign Up</button>
+    <div class="signup-container">
+        <h2>Create an Account</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button class="btn signup-btn" id="signupButton">Sign Up</button>
+       
     </div>
 
     <script>
