@@ -1,0 +1,7 @@
+[] Add search for author
+[] Add search for author
+[] Recomendaions
+[] give review
+[] logout function
+[]give rating
+[]read dropped cant be styled
