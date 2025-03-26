@@ -45,6 +45,23 @@ async function addBook(db, username, book) {
 	}
 }
 
+async function addReview(db, username, book) {
+	try {
+		const users = db.collection("users");
+		const result = await users.updateOne(
+			{ username: username, "books.bookId": book.bookId },
+			{ $set: { "books.$": book } }
+		);
+		if (result.matchedCount > 0) {
+			return { success: true, message: "Book updated successfully" };
+		} else {
+			return { success: false, message: "Failed to update book" };
+		}
+	} catch (error) {
+		return { success: false, message: error.message };
+	}
+}
+
 async function getBooks(db, username) {
 	try {
 		const users = db.collection("users");
@@ -96,7 +113,24 @@ async function checkLogin(db, email, password) {
 		return { success: false, message: error.message };
 	}
 }
+async function getBooksWithReviews(db) {
+    try {
+        const users = db.collection("users");
+        const pipeline = [
+            { $unwind: "$books" }, // Deconstruct the books array
+            { $match: { "books.review": { $exists: true, $ne: "" } } }, // Match books with a non-empty review field
+            { $project: { _id: 0, username: 1, book: "$books" } } // Project the username and book details
+        ];
+        const booksWithReviews = await users.aggregate(pipeline).toArray();
+        return booksWithReviews;
+    } catch (error) {
+        console.error(`Error retrieving books with reviews: ${error}`);
+        return [];
+    }
+}
 module.exports = {
+	getBooksWithReviews,
+	addReview,
 	addUser,
 	addBook,
 	getBooks,

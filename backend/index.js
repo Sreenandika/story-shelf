@@ -33,6 +33,15 @@ app.get("/:username/home", (req, res) => {
 app.get("/:username/profile", (req, res) => {
 	res.sendFile(path.join(__dirname, "../public/profile.html"));
 });
+app.get("/:username/recommended", (req, res) => {
+	res.sendFile(path.join(__dirname, "../public/recommendations.html"));
+});
+app.get("/:username/reviews", (req, res) => {
+	res.sendFile(path.join(__dirname, "../public/review.html"));
+});
+app.get("/:username/users", (req, res) => {
+	res.sendFile(path.join(__dirname, "../public/userReviews.html"));
+});
 
 function calculateCosineSimilarity(vecA, vecB) {
 	const dotProduct = vecA.reduce((sum, a, i) => sum + a * vecB[i], 0);
@@ -59,18 +68,16 @@ app.post("/addBook", async (req, res) => {
 	res.send(result);
 });
 
-app.post("/recommendations", async (req, res) => {
-	const { userId } = req.body;
+app.get("/recommendations", async (req, res) => {
+	const { userId } = req.query;
 	if (!userId) {
 		return res.status(400).json({ error: "User ID is required" });
 	}
 	try {
 		await client.connect();
 		const database = client.db("story_shelf");
-		const likedBooks = await funcs.getBooks(database, userId);
-		console.log(likedBooks);
+		const likedBooks = await funcs.getBooks(database, userId);		
 		const likedBookIds = likedBooks.map((book) => book.book.bookId);
-		console.log(likedBookIds);
 		if (likedBookIds.length === 0) {
 			return res
 				.status(200)
@@ -105,9 +112,9 @@ app.post("/recommendations", async (req, res) => {
 		// Candidate Book Retrieval (Example: Search by authors)
 		let candidateBookIds = new Set();
 		for (const book of likedBookFeatures) {
-			for (const authors of book.authors) {
+			for (const category of book.categories) {
 				const searchResponse = await axios.get(
-					`https://www.googleapis.com/books/v1/volumes?q=author:${authors}`
+					`https://www.googleapis.com/books/v1/volumes?q=category:${category}`
 				);
 				if (searchResponse.data.items) {
 					searchResponse.data.items.forEach((item) =>
@@ -118,7 +125,7 @@ app.post("/recommendations", async (req, res) => {
 		}
 
 		candidateBookIds = [...candidateBookIds];
-
+		candidateBookIds = candidateBookIds.slice(0, 10);
 		const recommendations = [];
 		for (const candidateBookId of candidateBookIds) {
 			const response = await axios.get(
@@ -127,7 +134,6 @@ app.post("/recommendations", async (req, res) => {
 			const candidateBookInfo = response.data.volumeInfo;
 			if (candidateBookInfo.description) {
 				const candidateVector = tfidf.tfidfs([candidateBookInfo.description]);
-				console.log(candidateVector);
 				if (candidateVector.length > 0) {
 					const similarity = calculateCosineSimilarity(
 						userProfile,
@@ -187,6 +193,22 @@ app.post("/login", async (req, res) => {
 	}
 });
 
+
+app.post("/addReview", async (req, res) => {
+	await client.connect();
+	const database = client.db("story_shelf");
+	const book = req.body.book;
+	const username = req.body.username;
+	const result = await funcs.addReview(database, username, book);
+	res.send(result);
+});
+
+app.get("/getBooksWithReviews", async (req, res) => {
+	await client.connect();
+	const database = client.db("story_shelf");
+	const result = await funcs.getBooksWithReviews(database);
+	res.send(result);
+});
 
 app.listen(port, () => {
 	console.log(`Server is running on http://localhost:${port}`);
