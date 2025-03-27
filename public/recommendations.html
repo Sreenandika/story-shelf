@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Story Shelf</title>
+		<style>
+			/* General Styles */
+			body {
+				font-family: "Arial", sans-serif;
+				background: url("https://i.pinimg.com/736x/eb/15/ce/eb15ce11f36e8f19f03ab3af34156d66.jpg");
+				margin: 0;
+				padding: 0;
+				background-color: #f8f9fa;
+				color: #333;
+			}
+
+			/* Navbar Styling */
+			.navbar {
+				background-color: #0056b3;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 15px 40px;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+				width: 100%;
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 1000;
+			}
+
+			.navbar .logo {
+				display: flex;
+				align-items: center;
+			}
+
+			.navbar img {
+				width: 50px;
+				height: 50px;
+				margin-right: 12px;
+				border-radius: 50%;
+				background: white;
+				padding: 5px;
+			}
+
+			.navbar h1 {
+				color: white;
+				font-size: 22px;
+				font-weight: bold;
+				margin: 0;
+			}
+
+			.nav-links {
+				display: flex;
+				gap: 20px;
+			}
+
+			.nav-links a {
+				color: white;
+				text-decoration: none;
+				font-size: 16px;
+				font-weight: bold;
+				padding: 15px 58px;
+				border-radius: 5px;
+				transition: background 0.3s;
+			}
+
+			.nav-links a:hover {
+				background-color: rgba(255, 255, 255, 0.2);
+			}
+
+			/* Main Container */
+			.container {
+				background: white;
+				padding: 40px;
+				border-radius: 10px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				width: 80%;
+				max-width: 900px;
+				margin: 100px auto 50px;
+				text-align: center;
+			}
+
+			h2 {
+				color: #333;
+				font-size: 26px;
+				margin-bottom: 20px;
+			}
+
+			/* Search Bar */
+			.search-box {
+				display: flex;
+				justify-content: center;
+				gap: 10px;
+				margin-bottom: 20px;
+			}
+
+			#searchInput {
+				width: 70%;
+				padding: 12px;
+				border: 2px solid #ddd;
+				border-radius: 5px;
+				font-size: 16px;
+			}
+
+			button {
+				background-color: #007bff;
+				color: white;
+				border: none;
+				padding: 12px 15px;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 16px;
+				transition: background 0.3s;
+				font-weight: bold;
+			}
+
+			button:hover {
+				background-color: #004a99;
+			}
+
+			/* Book List */
+			.book-list {
+				margin-top: 20px;
+			}
+
+			.book {
+				display: flex;
+				align-items: center;
+				background: white;
+				padding: 15px;
+				margin-bottom: 15px;
+				border-radius: 8px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
+
+			.book:hover {
+				transform: scale(1.03);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+			}
+
+			.book img {
+				width: 80px;
+				height: auto;
+				border-radius: 5px;
+				margin-right: 15px;
+			}
+
+			.book-details {
+				text-align: left;
+				max-width: 600px;
+			}
+
+			.book-title {
+				font-size: 18px;
+				font-weight: bold;
+				color: #333;
+			}
+
+			.book-author {
+				color: #666;
+				font-size: 14px;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Navbar -->
+		<nav class="navbar">
+			<div class="logo">
+				<h1 style="font-family: monospace">Story Shelf</h1>
+			</div>
+			<div class="nav-links">
+				<a href="home">Home</a>
+				<a href="recommended">Recommended</a>
+				<a href="profile">Profile</a>
+				<a href="logout">Logout</a>
+				<a href="reviews">Reviews</a>
+			</div>
+		</nav>
+
+		<!-- Main Content -->
+		<div class="container">
+			<div id="results" class="book-list"></div>
+		</div>
+		<script>
+			var apiRec;
+			async function getRecBooks() {
+				const userId = window.location.pathname.split("/")[1];
+				const apiRecResponse = await fetch(`/recommendations?userId=${userId}`);
+				apiRec = await apiRecResponse.json();
+				const resultsDiv = document.getElementById("results");
+				const bookIds = apiRec;
+				bookIds.recommendations.forEach(async (Id) => {
+					const cacheStorage = await caches.open("book-cache");
+					const cachedResponse = await cacheStorage.match(
+						`https://www.googleapis.com/books/v1/volumes/${Id}`
+					);
+					if (cachedResponse) {
+						// Load from cache
+						const cachedData = await cachedResponse.json();
+						renderBook(cachedData, resultsDiv);
+					} else {
+						// Fetch from API
+						const response = await fetch(
+							`https://www.googleapis.com/books/v1/volumes/${Id}`
+						);
+						const item = await response.json();
+						renderBook(item, resultsDiv);
+
+						// Add to Cache Storage
+						const cacheStorage = await caches.open("book-cache");
+						cacheStorage.add(
+							`https://www.googleapis.com/books/v1/volumes/${Id}`
+						);
+					}
+				});
+			}
+			function renderBook(item, resultsDiv) {
+				const book = document.createElement("div");
+				book.className = "book";
+
+				const index = document.createElement("span");
+				index.textContent = `${resultsDiv.children.length + 1}.`;
+				index.style.fontWeight = "bold";
+				index.style.marginRight = "10px";
+
+				const img = document.createElement("img");
+				img.src = item.volumeInfo.imageLinks?.thumbnail || "";
+				img.alt = item.volumeInfo.title;
+
+				const details = document.createElement("div");
+				details.className = "book-details";
+
+				const title = document.createElement("h3");
+				title.textContent = item.volumeInfo.title;
+
+				const description = document.createElement("p");
+				const fullDescription =
+					item.volumeInfo.description || "No description available";
+				const sanitizedDescription = fullDescription.replace(
+					/<\/?[^>]+(>|$)/g,
+					""
+				); // Remove HTML tags
+				const truncatedDescription =
+					sanitizedDescription.split(" ").slice(0, 20).join(" ") +
+					(sanitizedDescription.split(" ").length > 30 ? "..." : "");
+				description.textContent = truncatedDescription;
+
+				const genres = document.createElement("p");
+				const genreList = item.volumeInfo.categories
+					? item.volumeInfo.categories.slice(0, 1).join(", ")
+					: "No genres available";
+				genres.textContent = `Genres: ${genreList}`;
+
+				details.appendChild(title);
+				details.appendChild(description);
+				details.appendChild(genres);
+
+				const dropdown = document.createElement("select");
+				dropdown.style.marginLeft = "auto";
+
+				const option1 = document.createElement("option");
+				option1.value = "want-to-read";
+				option1.textContent = "Want to Read";
+				option1.onclick = () => handleOptionClick("want-to-read");
+
+				const option2 = document.createElement("option");
+				option2.value = "read";
+				option2.textContent = "Read";
+				option2.onclick = () => handleOptionClick("read");
+
+				const option3 = document.createElement("option");
+				option3.value = "dropped";
+				option3.textContent = "Dropped";
+				option3.onclick = () => handleOptionClick("dropped");
+
+				dropdown.appendChild(option1);
+				dropdown.appendChild(option2);
+				dropdown.appendChild(option3);
+				dropdown.style.marginLeft = "auto";
+				details.appendChild(title);
+				details.appendChild(description);
+				book.appendChild(index);
+				book.appendChild(img);
+				book.appendChild(details);
+				book.appendChild(dropdown);
+
+				resultsDiv.appendChild(book);
+			}
+
+			function handleOptionClick(category) {
+				console.log("LMAO\n");
+				const entryNumber =
+					parseInt(
+						event.target
+							.closest(".book")
+							.querySelector("span")
+							.textContent.trim()
+					) - 1;
+				console.log(apiRec.recommendations[entryNumber]);
+				const bookTitle = event.target
+					.closest(".book")
+					.querySelector(".book-details h3").textContent;
+				const imgLink = event.target.closest(".book").querySelector("img").src;
+				const description = event.target
+					.closest(".book")
+					.querySelector(".book-details p").textContent;
+				const genres = event.target
+					.closest(".book")
+					.querySelector(".book-details p:nth-of-type(2)").textContent;
+				const dataToSend = {
+					bookId: apiRec.recommendations[entryNumber],
+					bookName: bookTitle,
+					coverLink: imgLink,
+					description: description,
+					subject: genres,
+					category: category,
+				};
+				const username = window.location.pathname.split("/")[1];
+				fetch("/addBook", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						book: dataToSend,
+						username: username,
+					}),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						console.log("Success:", data);
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+					});
+			}
+
+			getRecBooks();
+		</script>
+	</body>
+</html>
