@@ -25,9 +25,75 @@
 				display: block;
 				margin-bottom: 10px;
 			}
+			.navbar {
+				background-color: #0056b3;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 15px 40px;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+				width: 100%;
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 1000;
+			}
+
+			.navbar .logo {
+				display: flex;
+				align-items: center;
+			}
+
+			.navbar img {
+				width: 50px;
+				height: 50px;
+				margin-right: 12px;
+				border-radius: 50%;
+				background: white;
+				padding: 5px;
+			}
+
+			.navbar h1 {
+				color: white;
+				font-size: 22px;
+				font-weight: bold;
+				margin: 0;
+			}
+
+			.nav-links {
+				display: flex;
+				gap: 20px;
+			}
+
+			.nav-links a {
+				color: white;
+				text-decoration: none;
+				font-size: 16px;
+				font-weight: bold;
+				padding: 15px 58px;
+				border-radius: 5px;
+				transition: background 0.3s;
+			}
+
+			.nav-links a:hover {
+				background-color: rgba(255, 255, 255, 0.2);
+			}
 		</style>
 	</head>
 	<body>
+		<nav class="navbar">
+			<div class="logo">
+				<h1 style="font-family: monospace">Story Shelf</h1>
+			</div>
+			<div class="nav-links">
+				<a href="home">Home</a>
+				<a href="recommended">Recommended</a>
+				<a href="profile">Profile</a>
+				<a href="logout">Logout</a>
+				<a href="reviews">Reviews</a>
+			</div>
+		</nav>
 		<div class="profile-header">
 			<h1 id="name">Name</h1>
 			<p id="email">Email</p>
@@ -64,7 +130,14 @@
 						const wantToRead = [];
 						const read = [];
 						const dropped = [];
-
+						const uniqueBooks = new Set();
+						data.books = data.books.filter((book) => {
+							if (uniqueBooks.has(book.bookName)) {
+								return false;
+							}
+							uniqueBooks.add(book.bookName);
+							return true;
+						});
 						data.books.forEach((book) => {
 							if (book.category === "want-to-read") {
 								wantToRead.push(book);
