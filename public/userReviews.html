@@ -7,34 +7,62 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #598dcd;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
         }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
         .review-container {
             display: flex;
             overflow-x: auto;
             gap: 20px;
-            padding: 10px;
+            padding: 20px;
+            justify-content: center;
         }
+        
         .review-card {
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 15px;
-            width: 300px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 12px;
+            padding: 20px;
+            width: 320px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             flex-shrink: 0;
+            transition: transform 0.3s ease-in-out;
         }
+        
+        .review-card:hover {
+            transform: translateY(-5px);
+        }
+        
         .review-card img {
             width: 100%;
             height: auto;
-            border-radius: 5px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        
         .review-card h3 {
-            margin: 10px 0 5px;
-            font-size: 18px;
+            margin: 15px 0 10px;
+            font-size: 20px;
+            color: #0056b3;
         }
+        
         .review-card p {
             margin: 5px 0;
             color: #555;
+            font-size: 14px;
+            text-align: left;
+        }
+        
+        .review-card p strong {
+            color: #333;
         }
     </style>
 </head>
