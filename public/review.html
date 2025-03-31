@@ -95,7 +95,7 @@
 h1 {
     margin-top: 100px;
     font-size: 32px;
-    color: #333;
+    color: #ede9e9;
 }
 
 /* Form Container */
@@ -204,7 +204,14 @@ button:active {
 				})
 					.then((response) => response.json())
 					.then((data) => {
-						books = data;
+						const uniqueBooks = new Set();
+						data.books = data.books.filter((book) => {
+							if (uniqueBooks.has(book.bookName)) {
+								return false;
+							}
+							uniqueBooks.add(book.bookName);
+							return true;
+						});
 						const bookSelect = document.getElementById("book");
 						data.books.forEach((book) => {
 							const option = document.createElement("option");
