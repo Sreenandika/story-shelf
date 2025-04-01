@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -5,166 +6,296 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Book Review</title>
 		<style>
-	body {
-    font-family: "Poppins", sans-serif;
-    background-color: #f4f4f4;
-	background: url("https://i.pinimg.com/736x/85/03/32/850332a9b427bd6f10f010c390c7f457.jpg");
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
+			body {
+				font-family: "Poppins", sans-serif;
+				background-color: #f4f4f4;
+				background: url("https://i.pinimg.com/736x/85/03/32/850332a9b427bd6f10f010c390c7f457.jpg");
+				background-size: cover;
+				background-attachment: fixed;
+				margin: 0;
+				padding: 0;
+				text-align: center;
+			}
 			.form-group {
-				margin-bottom: 15px;
+				margin-bottom: 20px;
 			}
 			label {
 				display: block;
-				margin-bottom: 5px;
+				margin-bottom: 8px;
+				font-weight: bold;
+				font-size: 18px;
+				color: #0056b3;
 			}
 			select,
+			textarea,
 			input[type="text"],
 			button {
 				width: 100%;
-				padding: 8px;
+				padding: 12px;
 				box-sizing: border-box;
+				font-size: 16px;
+				border-radius: 5px;
+				border: 1px solid #ccc;
+			}
+			textarea {
+				min-height: 150px;
+				resize: vertical;
 			}
 			button {
 				background-color: #007bff;
 				color: white;
 				border: none;
 				cursor: pointer;
+				font-weight: bold;
+				font-size: 18px;
+				margin-top: 10px;
+				transition: all 0.3s ease;
+				padding: 15px;
 			}
 			button:hover {
 				background-color: #0056b3;
+				transform: translateY(-2px);
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 			}
+			button:active {
+				transform: translateY(0);
+			}
+			
+			/* Navbar Styling */
 			.navbar {
-				background-color: #0056b3;
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 15px 40px;
-				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-				width: 100%;
-				position: fixed;
-				top: 0;
-				left: 0;
-				right: 0;
-				z-index: 1000;
+            background-color: #0056b3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar img {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 50%;
+            background: white;
+            padding: 3px;
+        }
+
+        .navbar h1 {
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-reviews-btn {
+            background-color: #007BFF;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        .user-reviews-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Mobile menu icon */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 1001;
+            margin-right: 10px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+		     /* Responsive styles */
+			 @media screen and (max-width: 768px) {
+            .navbar {
+                padding: 15px;
+            }
+
+            .menu-toggle {
+                display: flex;
+                position: absolute;
+                right: 15px;
+                top: 20px;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                height: 100vh;
+                width: 70%;
+                max-width: 300px;
+                background-color: #004a99;
+                flex-direction: column;
+                gap: 0;
+                padding-top: 70px;
+                transition: all 0.3s ease-in-out;
+                align-items: flex-start;
+                z-index: 999;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .nav-links a {
+                width: 100%;
+                padding: 15px;
+                border-radius: 0;
+                box-sizing: border-box;
+            }
+
+            .user-reviews-btn {
+                width: calc(100% - 30px);
+                margin: 10px 15px;
+                text-align: center;
+                box-sizing: border-box;
+            }}
+
+			/* Page Content */
+			.page-title {
+				margin-top: 100px;
+				font-size: 32px;
+				color: #ede9e9;
+				text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 			}
 
-			.navbar .logo {
-				display: flex;
-				align-items: center;
-			}
-
-			.navbar img {
-				width: 50px;
-				height: 50px;
-				margin-right: 12px;
-				border-radius: 50%;
+			/* Form Container */
+			.review-form {
 				background: white;
-				padding: 5px;
+				max-width: 650px;
+				width: 90%;
+				margin: 30px auto 50px;
+				padding: 35px;
+				border-radius: 15px;
+				box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 			}
 
-			.navbar h1 {
-				color: white;
-				font-size: 22px;
-				font-weight: bold;
-				margin: 0;
+			.form-header {
+				margin-bottom: 30px;
+				text-align: center;
 			}
 
-			.nav-links {
-				display: flex;
-				gap: 20px;
+			.form-header h2 {
+				color: #0056b3;
+				font-size: 28px;
+				margin-bottom: 10px;
 			}
 
-			.nav-links a {
-				color: white;
-				text-decoration: none;
+			.form-header p {
+				color: #666;
 				font-size: 16px;
-				font-weight: bold;
-				padding: 15px 58px;
-				border-radius: 5px;
-				transition: background 0.3s;
 			}
 
-			.nav-links a:hover {
-				background-color: rgba(255, 255, 255, 0.2);
+			.rating-container {
+				display: flex;
+				flex-direction: column;
+				margin-bottom: 20px;
 			}
 
-/* Page Content */
-h1 {
-    margin-top: 100px;
-    font-size: 32px;
-    color: #ede9e9;
-}
+			.stars {
+				display: flex;
+				justify-content: center;
+				margin: 10px 0;
+			}
 
-/* Form Container */
-form {
-    background: white;
-    max-width: 450px;
-    margin: 20px auto;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
+			.stars i {
+				color: #ddd;
+				font-size: 30px;
+				margin: 0 5px;
+				cursor: pointer;
+			}
 
-/* Form Elements */
-.form-group {
-    margin-bottom: 20px;
-    text-align: left;
-}
+			.stars i.active {
+				color: #ffc107;
+			}
 
-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    font-size: 18px;
-    color: #333;
-}
+			/* Submit Button with animation */
+			.submit-btn {
+				position: relative;
+				overflow: hidden;
+				z-index: 1;
+			}
 
-select,
-input[type="text"] {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 18px;
-    transition: border 0.3s;
-}
+			.submit-btn:after {
+				content: '';
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 0;
+				background-color: #0056b3;
+				transition: all 0.3s ease;
+				z-index: -1;
+			}
 
-select:focus,
-input[type="text"]:focus {
-    border-color: #007bff;
-    outline: none;
-}
-
-/* Submit Button */
-button {
-    width: 100%;
-    padding: 14px;
-    font-size: 20px;
-    font-weight: bold;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.1s;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-
-button:active {
-    transform: scale(0.98);
-}
+			.submit-btn:hover:after {
+				height: 100%;
+			}
 		</style>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 	</head>
 	<body>
 		<nav class="navbar">
 			<div class="logo">
-				<h1 style="font-family: monospace">Story Shelf</h1>
+				<h1 style="font-family:monospace;">Story Shelf</h1>
+			</div>
+			
+			<div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+				<span></span>
+				<span></span>
+				<span></span>
 			</div>
 			<div class="nav-links">
 				<a href="home">Home</a>
@@ -172,24 +303,29 @@ button:active {
 				<a href="profile">Profile</a>
 				<a href="logout">Logout</a>
 				<a href="reviews">Reviews</a>
+				<button class="user-reviews-btn" onclick="window.location.href='users'">User Reviews</button>
 			</div>
 		</nav>
-		<h1>Book Review</h1>
-		<form>
+		<h1 class="page-title">Share Your Reading Experience</h1>
+		<form class="review-form">
+			<div class="form-header">
+				<h2>Book Review</h2>
+				<p>Let others know what you thought about this book</p>
+			</div>
 			<div class="form-group">
 				<label for="book">Select a Book:</label>
 				<select id="book" name="book"></select>
 			</div>
+			
 			<div class="form-group">
 				<label for="review">Your Review:</label>
-				<input
-					type="text"
+				<textarea
 					id="review"
 					name="review"
-					placeholder="Write your review here"
-				/>
+					placeholder="Share your thoughts on the plot, characters, writing style, and whether you'd recommend this book to others..."
+				></textarea>
 			</div>
-			<button type="submit">Submit Review</button>
+			<button type="submit" class="submit-btn">Submit Review</button>
 		</form>
 		<script>
 			var books = [];
