@@ -1,333 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story Shelf</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: url("https://i.pinimg.com/736x/eb/15/ce/eb15ce11f36e8f19f03ab3af34156d66.jpg");
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-        }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Story Shelf</title>
+		<style>
+			/* General Styles */
+			body {
+				font-family: "Arial", sans-serif;
+				background: url("https://i.pinimg.com/736x/eb/15/ce/eb15ce11f36e8f19f03ab3af34156d66.jpg");
+				margin: 0;
+				padding: 0;
+				background-color: #f8f9fa;
+				color: #333;
+			}
 
-        /* Navbar Styling */
-        .navbar {
-            background-color: #0056b3;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            box-sizing: border-box;
-        }
+			/* Navbar Styling */
+			.navbar {
+				background-color: #0056b3;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 15px 20px;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+				width: 100%;
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 1000;
+				box-sizing: border-box;
+			}
 
-        .navbar .logo {
-            display: flex;
-            align-items: center;
-        }
+			.navbar .logo {
+				display: flex;
+				align-items: center;
+			}
 
-        .navbar img {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-            border-radius: 50%;
-            background: white;
-            padding: 3px;
-        }
+			.navbar img {
+				width: 40px;
+				height: 40px;
+				margin-right: 10px;
+				border-radius: 50%;
+				background: white;
+				padding: 3px;
+			}
 
-        .navbar h1 {
-            color: white;
-            font-size: 20px;
-            font-weight: bold;
-            margin: 0;
-        }
+			.navbar h1 {
+				color: white;
+				font-size: 20px;
+				font-weight: bold;
+				margin: 0;
+			}
 
-        .nav-links {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+			.nav-links {
+				display: flex;
+				gap: 10px;
+				align-items: center;
+			}
 
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 10px 15px;
-            border-radius: 5px;
-            transition: background 0.3s;
-        }
+			.nav-links a {
+				color: white;
+				text-decoration: none;
+				font-size: 16px;
+				font-weight: bold;
+				padding: 10px 15px;
+				border-radius: 5px;
+				transition: background 0.3s;
+			}
 
-        .nav-links a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
+			.nav-links a:hover {
+				background-color: rgba(255, 255, 255, 0.2);
+			}
 
-        .user-reviews-btn {
-            background-color: #007BFF;
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-            white-space: nowrap;
-        }
+			.user-reviews-btn {
+				background-color: #007bff;
+				color: white;
+				font-size: 16px;
+				font-weight: bold;
+				padding: 10px 15px;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				transition: background 0.3s;
+				white-space: nowrap;
+			}
 
-        .user-reviews-btn:hover {
-            background-color: #0056b3;
-        }
+			.user-reviews-btn:hover {
+				background-color: #0056b3;
+			}
 
-        /* Mobile menu icon */
-        .menu-toggle {
-            display: none;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30px;
-            height: 21px;
-            cursor: pointer;
-            z-index: 1001;
-            margin-right: 10px;
-        }
+			/* Mobile menu icon */
+			.menu-toggle {
+				display: none;
+				flex-direction: column;
+				justify-content: space-between;
+				width: 30px;
+				height: 21px;
+				cursor: pointer;
+				z-index: 1001;
+				margin-right: 10px;
+			}
 
-        .menu-toggle span {
-            display: block;
-            height: 3px;
-            width: 100%;
-            background-color: white;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
+			.menu-toggle span {
+				display: block;
+				height: 3px;
+				width: 100%;
+				background-color: white;
+				border-radius: 3px;
+				transition: all 0.3s ease;
+			}
 
-        /* Main Container */
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 900px;
-            margin: 100px auto 50px;
-            text-align: center;
-        }
+			/* Main Container */
+			.container {
+				background: white;
+				padding: 30px;
+				border-radius: 10px;
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+				width: 90%;
+				max-width: 900px;
+				margin: 100px auto 50px;
+				text-align: center;
+			}
 
-        h2 {
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+			h2 {
+				color: #333;
+				font-size: 24px;
+				margin-bottom: 20px;
+			}
 
-        /* Search Bar */
-        .search-box {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+			/* Search Bar */
+			.search-box {
+				display: flex;
+				justify-content: center;
+				gap: 10px;
+				margin-bottom: 20px;
+			}
 
-        #searchInput {
-            width: 70%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
+			#searchInput {
+				width: 70%;
+				padding: 12px;
+				border: 2px solid #ddd;
+				border-radius: 5px;
+				font-size: 16px;
+			}
 
-        button {
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            padding: 12px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background 0.3s;
-            font-weight: bold;
-        }
+			button {
+				background-color: #007bff;
+				color: white;
+				border: none;
+				padding: 12px 15px;
+				border-radius: 5px;
+				cursor: pointer;
+				font-size: 16px;
+				transition: background 0.3s;
+				font-weight: bold;
+			}
 
-        button:hover {
-            background-color: #004a99;
-        }
+			button:hover {
+				background-color: #004a99;
+			}
 
-        /* Book List */
-        .book-list {
-            margin-top: 20px;
-        }
+			/* Book List */
+			.book-list {
+				margin-top: 20px;
+			}
 
-        .book {
-            display: flex;
-            align-items: center;
-            background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+			.book {
+				display: flex;
+				align-items: center;
+				background: white;
+				padding: 15px;
+				margin-bottom: 15px;
+				border-radius: 8px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
 
-        .book:hover {
-            transform: scale(1.03);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
+			.book:hover {
+				transform: scale(1.03);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+			}
 
-        .book img {
-            width: 80px;
-            height: auto;
-            border-radius: 5px;
-            margin-right: 15px;
-        }
+			.book img {
+				width: 80px;
+				height: auto;
+				border-radius: 5px;
+				margin-right: 15px;
+			}
 
-        .book-details {
-            text-align: left;
-            max-width: 600px;
-        }
+			.book-details {
+				text-align: left;
+				max-width: 600px;
+			}
 
-        .book-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-        }
+			.book-title {
+				font-size: 18px;
+				font-weight: bold;
+				color: #333;
+			}
 
-        .book-author {
-            color: #666;
-            font-size: 14px;
-        }
+			.book-author {
+				color: #666;
+				font-size: 14px;
+			}
 
-        /* Responsive styles */
-        @media screen and (max-width: 768px) {
-            .navbar {
-                padding: 15px;
-            }
+			/* Responsive styles */
+			@media screen and (max-width: 768px) {
+				.navbar {
+					padding: 15px;
+				}
 
-            .menu-toggle {
-                display: flex;
-                position: absolute;
-                right: 15px;
-                top: 20px;
-            }
+				.menu-toggle {
+					display: flex;
+					position: absolute;
+					right: 15px;
+					top: 20px;
+				}
 
-            .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                height: 100vh;
-                width: 70%;
-                max-width: 300px;
-                background-color: #004a99;
-                flex-direction: column;
-                gap: 0;
-                padding-top: 70px;
-                transition: all 0.3s ease-in-out;
-                align-items: flex-start;
-                z-index: 999;
-            }
+				.nav-links {
+					position: fixed;
+					top: 0;
+					right: -100%;
+					height: 100vh;
+					width: 70%;
+					max-width: 300px;
+					background-color: #004a99;
+					flex-direction: column;
+					gap: 0;
+					padding-top: 70px;
+					transition: all 0.3s ease-in-out;
+					align-items: flex-start;
+					z-index: 999;
+				}
 
-            .nav-links.active {
-                right: 0;
-            }
+				.nav-links.active {
+					right: 0;
+				}
 
-            .nav-links a {
-                width: 100%;
-                padding: 15px;
-                border-radius: 0;
-                box-sizing: border-box;
-            }
+				.nav-links a {
+					width: 100%;
+					padding: 15px;
+					border-radius: 0;
+					box-sizing: border-box;
+				}
 
-            .user-reviews-btn {
-                width: calc(100% - 30px);
-                margin: 10px 15px;
-                text-align: center;
-                box-sizing: border-box;
-            }
+				.user-reviews-btn {
+					width: calc(100% - 30px);
+					margin: 10px 15px;
+					text-align: center;
+					box-sizing: border-box;
+				}
 
-            .container {
-                width: 95%;
-                padding: 20px;
-                margin-top: 80px;
-            }
+				.container {
+					width: 95%;
+					padding: 20px;
+					margin-top: 80px;
+				}
 
-            .search-box {
-                flex-direction: column;
-            }
+				.search-box {
+					flex-direction: column;
+				}
 
-            #searchInput {
-                width: 100%;
-            }
+				#searchInput {
+					width: 100%;
+				}
 
-            .book {
-                flex-direction: column;
-                text-align: center;
-            }
+				.book {
+					flex-direction: column;
+					text-align: center;
+				}
 
-            .book img {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
+				.book img {
+					margin-right: 0;
+					margin-bottom: 10px;
+				}
 
-            .book-details {
-                text-align: center;
-                max-width: 100%;
-            }
-        }
+				.book-details {
+					text-align: center;
+					max-width: 100%;
+				}
+			}
 
-        /* For smaller mobile screens */
-        @media screen and (max-width: 480px) {
-            .navbar h1 {
-                font-size: 18px;
-            }
+			/* For smaller mobile screens */
+			@media screen and (max-width: 480px) {
+				.navbar h1 {
+					font-size: 18px;
+				}
 
-            h2 {
-                font-size: 20px;
-            }
-        }
-    </style>
-</head>
-<body>
+				h2 {
+					font-size: 20px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<!-- Navbar -->
+		<nav class="navbar">
+			<div class="logo">
+				<h1 style="font-family: monospace">Story Shelf</h1>
+			</div>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">
-            <h1 style="font-family:monospace;">Story Shelf</h1>
-        </div>
-        
-        <div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </div>
-        
-        <div class="nav-links" id="navLinks">
-            <a href="home">Home</a>
-            <a href="recommended">Recommended</a>
-            <a href="profile">Profile</a>
-            <a href="logout">Logout</a>
-            <a href="reviews">Reviews</a>
-            <button class="user-reviews-btn" onclick="window.location.href='users'">User Reviews</button>
-        </div>
-    </nav>
-    
+			<div class="menu-toggle" id="menuToggle" onclick="toggleMenu()">
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
 
-    <!-- Main Content -->
-    <div class="container">
-        <h2>Find Your Favorite Books</h2>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Search for books...">
-            <button onclick="searchBooks()">Search</button>
-        </div>
-        <div id="results" class="book-list"></div>
-    </div>
+			<div class="nav-links" id="navLinks">
+				<a href="home">Home</a>
+				<a href="recommended">Recommended</a>
+				<a href="profile">Profile</a>
+				<a href="logout">Logout</a>
+				<a href="reviews">Reviews</a>
+				<button class="user-reviews-btn" onclick="window.location.href='users'">
+					User Reviews
+				</button>
+			</div>
+		</nav>
+
+		<!-- Main Content -->
+		<div class="container">
+			<h2>Find Your Favorite Books</h2>
+			<div class="search-box">
+				<input type="text" id="searchInput" placeholder="Search for books..." />
+				<button onclick="searchBooks()">Search</button>
+			</div>
+			<div id="results" class="book-list"></div>
+		</div>
 
 		<script>
 			var data = [];
@@ -413,8 +413,10 @@
 			}
 			function handleOptionClick(category) {
 				console.log("LMAO\n");
-				var entryNumber = event.target.closest(".book").querySelector("h2").textContent;
-				entryNumber = entryNumber -1 ; 
+				var entryNumber = event.target
+					.closest(".book")
+					.querySelector("h2").textContent;
+				entryNumber = entryNumber - 1;
 				console.log(data.items[entryNumber].id);
 				const bookTitle = event.target
 					.closest(".book")
@@ -427,7 +429,7 @@
 					.closest(".book")
 					.querySelector(".book-details p:nth-of-type(2)").textContent;
 				const dataToSend = {
-					bookId : data.items[entryNumber].id,
+					bookId: data.items[entryNumber].id,
 					bookName: bookTitle,
 					coverLink: imgLink,
 					description: description,
@@ -441,17 +443,21 @@
 						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
-						book :dataToSend,
+						book: dataToSend,
 						username: username,
 					}),
 				})
-				.then((response) => response.json())
-				.then((data) => {
-					console.log("Success:", data);
-				})
-				.catch((error) => {
-					console.error("Error:", error);
-				});
+					.then((response) => response.json())
+					.then((data) => {
+						console.log("Success:", data);
+					})
+					.catch((error) => {
+						console.error("Error:", error);
+					});
+			}
+			function toggleMenu() {
+				const navLinks = document.querySelector(".nav-links");
+				navLinks.classList.toggle("active");
 			}
 		</script>
 	</body>
