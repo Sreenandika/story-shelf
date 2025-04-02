@@ -209,7 +209,11 @@ app.get("/getBooksWithReviews", async (req, res) => {
 	const result = await funcs.getBooksWithReviews(database);
 	res.send(result);
 });
-
+app.get("/:username/logout", (req, res) => {
+	// Perform logout logic here (e.g., clear session, token, etc.)
+	res.redirect("/");
+	console.log("User logged out");
+});
 app.listen(port, () => {
 	console.log(`Server is running on http://localhost:${port}`);
 });
