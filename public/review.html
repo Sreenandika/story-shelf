@@ -345,6 +345,7 @@
 				})
 					.then((response) => response.json())
 					.then((data) => {
+						books = data;
 						const uniqueBooks = new Set();
 						data.books = data.books.filter((book) => {
 							if (uniqueBooks.has(book.bookName)) {
@@ -369,7 +370,7 @@
 					const username = window.location.pathname.split("/")[1];
 					const bookName = document.getElementById("book").value;
 					const reviewText = document.getElementById("review").value;
-
+					console.log(books);
 					const selectedBook = books.books.find(
 						(book) => book.bookName === bookName
 					);

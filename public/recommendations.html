@@ -285,7 +285,18 @@
 			var apiRec;
 			async function getRecBooks() {
 				const userId = window.location.pathname.split("/")[1];
-				const apiRecResponse = await fetch(`/recommendations?userId=${userId}`);
+				const cacheStorage = await caches.open("recommendations-cache");
+				const cachedResponse = await cacheStorage.match(`/recommendations?userId=${userId}`);
+				let apiRecResponse;
+				if (cachedResponse) {
+					// Load from cache
+					apiRecResponse = cachedResponse;
+				} else {
+					// Fetch from API
+					apiRecResponse = await fetch(`/recommendations?userId=${userId}`);
+					// Add to Cache Storage
+					cacheStorage.put(`/recommendations?userId=${userId}`, apiRecResponse.clone());
+				}
 				apiRec = await apiRecResponse.json();
 				const resultsDiv = document.getElementById("results");
 				const bookIds = apiRec;
